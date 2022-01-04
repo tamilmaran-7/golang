@@ -1,0 +1,30 @@
+# KubeArmor is an open source software that enables you to protect your cloud workload at run-time.
+# To learn more about KubeArmor visit:
+# https://www.accuknox.com/kubearmor/
+
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: ksp-go-unsafepointer-code-injection
+  namespace: testns
+spec:
+  tags: ["unsafepackage", "code-injection", "golang"]
+  message: "Alert! pwnlib packages are used."
+  selector:
+    matchLabels:
+      container: ubuntu-1
+  process:
+    severity: 3
+    matchPaths:
+      - path: /usr/bin/readlink
+    action: Block
+  file:
+    severity: 5
+    matchPaths:
+      - path: /usr/local/lib/python2.7/dist-packages/pwnlib/shellcraft/templates/amd64/linux/syscalls/mprotect.asm
+      - path: /usr/local/lib/python2.7/dist-packages/pwnlib/shellcraft/templates/amd64/android/syscalls/pkey_mprotect.asm
+    matchDirectories:
+      - dir: /usr/local/lib/python2.7/dist-packages/pwnlib/
+      - dir: /usr/lib/go-1.10/pkg/
+      - dir: /usr/lib/python3/dist-packages/
+    action: Block
