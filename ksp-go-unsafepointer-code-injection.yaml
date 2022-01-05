@@ -9,7 +9,7 @@ metadata:
   namespace: testns
 spec:
   tags: ["unsafepackage", "code-injection", "golang"]
-  message: "Alert! pwnlib packages are used."
+  message: "Alert! packages are used."
   selector:
     matchLabels:
       container: ubuntu-1
@@ -17,14 +17,16 @@ spec:
     severity: 3
     matchPaths:
       - path: /usr/bin/readlink
+      - path: /usr/local/go/src/unsafe/unsafe.go
     action: Block
   file:
     severity: 5
     matchPaths:
       - path: /usr/local/lib/python2.7/dist-packages/pwnlib/shellcraft/templates/amd64/linux/syscalls/mprotect.asm
-      - path: /usr/local/lib/python2.7/dist-packages/pwnlib/shellcraft/templates/amd64/android/syscalls/pkey_mprotect.asm
+      - path: /usr/local/go/src/unsafe/unsafe.go
     matchDirectories:
       - dir: /usr/local/lib/python2.7/dist-packages/pwnlib/
       - dir: /usr/lib/go-1.10/pkg/
       - dir: /usr/lib/python3/dist-packages/
+      - dir: /usr/local/go/
     action: Block
